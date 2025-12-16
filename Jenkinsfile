@@ -12,7 +12,6 @@ pipeline {
                 git branch: "${env.BRANCH_NAME}", url: 'https://github.com/BVPallavan/devops-build.git'
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 script {
