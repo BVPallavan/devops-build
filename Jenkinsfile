@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     environment {
         DEV_REPO = "bvpallavan/dev"
         PROD_REPO = "bvpallavan/prod"
