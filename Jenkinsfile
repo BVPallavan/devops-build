@@ -6,7 +6,6 @@ pipeline {
         IMAGE_NAME = "devops-tasks-app"
         DOCKERHUB_CREDENTIALS = 'dockerhub-creds'  // ID from Jenkins credentials
     }
-
     stages {
         stage('Checkout') {
             steps {
