@@ -7,7 +7,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS = 'dockerhub-creds'  // ID from Jenkins credentials
     }
     stages {
-        stage('Checkout') {
+        stage('Clone') {
             steps {
                 git branch: "${env.BRANCH_NAME}", url: 'https://github.com/BVPallavan/devops-build.git'
             }
