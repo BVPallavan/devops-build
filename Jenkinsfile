@@ -4,7 +4,7 @@ pipeline {
         DEV_REPO = "bvpallavan/dev"
         PROD_REPO = "bvpallavan/prod"
         IMAGE_NAME = "devops-tasks-app"
-        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'  // ID from Jenkins credentials
+        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'   // ID from Jenkins credentials
     }
     stages {
         stage('Clone') {
