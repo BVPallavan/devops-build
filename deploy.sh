@@ -1,8 +1,8 @@
 #!/bin/bash
-set -e
+ENV=$1
 
-IMAGE_NAME="devops-tasks-app"
-IMAGE_TAG="latest"
+#IMAGE_NAME="devops-tasks-app"
+#IMAGE_TAG="latest"
 
 # Pull image from registry
 #echo "Pulling Docker image: $IMAGE_NAME:$IMAGE_TAG ..."
