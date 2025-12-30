@@ -2,7 +2,7 @@ version: "3.8"
 services:
   react-app:
     image: bvpallavan/${ENVIRONMENT}:latest
-    container_name: devops-tasks-app-${ENVIRONMENT}
+    container_name: devops-app-${ENVIRONMENT}
     ports:
       - "80:80"
     restart: always
