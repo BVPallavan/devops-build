@@ -1,8 +1,8 @@
+version: "3.8"
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: devops-tasks-app
+  react-app:
+    image: bvpallavan/${ENVIRONMENT}:latest
+    container_name: devops-tasks-app-${ENVIRONMENT}
     ports:
       - "80:80"
+    restart: always
