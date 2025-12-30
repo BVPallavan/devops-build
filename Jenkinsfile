@@ -1,59 +1,56 @@
 pipeline {
-    agent any
-    environment {
-        DEV_REPO = "bvpallavan/dev"
-        PROD_REPO = "bvpallavan/prod"
-        IMAGE_NAME = "devops-tasks-app"
-        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'   // ID from Jenkins credentials
-    }
-    stages {
-        stage('Clone') {
-            steps {
-                git branch: "${env.BRANCH_NAME}", url: 'https://github.com/BVPallavan/devops-build.git'
-            }
-        }
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    sh "docker build -t ${IMAGE_NAME}:${env.BRANCH_NAME} ."
-                }
-            }
-        }
+  agent any
 
-        stage('Push to Docker Hub') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS,
-                                                      usernameVariable: 'DOCKER_USER',
-                                                      passwordVariable: 'DOCKER_PASS')]) {
-                        sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
-                        
-                        if (env.BRANCH_NAME == 'dev') {
-                            sh "docker tag ${IMAGE_NAME}:${env.BRANCH_NAME} ${DEV_REPO}:${env.BRANCH_NAME}"
-                            sh "docker push ${DEV_REPO}:${env.BRANCH_NAME}"
-                        } else if (env.BRANCH_NAME == 'master') {
-                            sh "docker tag ${IMAGE_NAME}:${env.BRANCH_NAME} ${PROD_REPO}:${env.BRANCH_NAME}"
-                            sh "docker push ${PROD_REPO}:${env.BRANCH_NAME}"
-                        }
-                    }
-                }
-            }
-        }
+  environment {
+    DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+  }
 
-        stage('Deploy') {
-            when {
-                branch 'master'
-            }
-            steps {
-                script {
-                    // Example deployment: run container on server
-                    sh """
-                    docker stop ${IMAGE_NAME} || true
-                    docker rm ${IMAGE_NAME} || true
-                    docker run -d --name ${IMAGE_NAME} -p 80:80 ${PROD_REPO}:master
-                    """
-                }
-            }
-        }
+  stages {
+    stage('Build Docker Image') {
+      steps {
+        sh 'bash build.sh'
+      }
     }
+
+    stage('Push to DockerHub') {
+      steps {
+        script {
+          // Detect branch name from GIT_BRANCH (e.g., "origin/dev" or "origin/main")
+          def branch = env.GIT_BRANCH?.replaceFirst(/^origin\//, '')
+
+          if (branch == 'dev') {
+            sh """
+              echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
+              docker tag react-app:latest bvpallavan/dev:latest
+              docker push bvpallavan/dev:latest
+            """
+          } else if (branch == 'main') {
+            sh """
+              echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
+              docker tag react-app:latest bvpallavan/prod:latest
+              docker push bvpallavan/prod:latest
+            """
+          } else {
+            echo "Branch ${branch} not handled"
+          }
+        }
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        script {
+          def branch = env.GIT_BRANCH?.replaceFirst(/^origin\//, '')
+
+          if (branch == 'dev') {
+            sh 'bash deploy.sh dev'
+          } else if (branch == 'main') {
+            sh 'bash deploy.sh prod'
+          } else {
+            echo "Branch ${branch} not handled"
+          }
+        }
+      }
+    }
+  }
 }
