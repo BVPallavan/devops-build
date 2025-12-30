@@ -21,13 +21,13 @@ pipeline {
           if (branch == 'dev') {
             sh """
               echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
-              docker tag react-app:latest bvpallavan/dev:latest
+              docker tag devops-tasks-app:latest bvpallavan/dev:latest
               docker push bvpallavan/dev:latest
             """
           } else if (branch == 'main') {
             sh """
               echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
-              docker tag react-app:latest bvpallavan/prod:latest
+              docker tag devops-tasks-app:latest bvpallavan/prod:latest
               docker push bvpallavan/prod:latest
             """
           } else {
