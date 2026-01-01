@@ -20,5 +20,5 @@ echo "Launching devops-app-$ENV..."
 ENVIRONMENT=$ENV docker-compose up -d --build
 
 # Verify container is running
-docker ps -f name=devops-tasks-app-$ENV
+docker ps -f name=devops-tasks-app-$ENV 
 
