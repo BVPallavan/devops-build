@@ -1,13 +1,6 @@
 #!/bin/bash
 ENV=$1
 
-#IMAGE_NAME="devops-tasks-app"
-#IMAGE_TAG="latest"
-
-# Pull image from registry
-#echo "Pulling Docker image: $IMAGE_NAME:$IMAGE_TAG ..."
-#docker pull $IMAGE_NAME:$IMAGE_TAG
-
 # Stop and remove old container if exists
 if docker ps -q -f name=devops-app-dev; then
 	echo "Stopping devops-app-dev..."
